@@ -16,7 +16,8 @@ jobs:
 
       - name: Unpack mod sources and generate assets
         run: |
-          pip install pillow
+         sudo apt-get update && sudo apt-get install -y ffmpeg
+         pip install pillow
           python3 setup_1.py
           python3 setup_2.py
           python3 setup_3.py
