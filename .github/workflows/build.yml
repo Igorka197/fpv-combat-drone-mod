@@ -1,6 +1,4 @@
 name: Build FPV Combat Drone Mod
-name: Build FPV Combat Drone Mod
-
 on:
   push:
     branches: [ main, master ]
