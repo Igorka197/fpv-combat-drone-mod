@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Unpack mod sources
         run: |
-          cat << 'EOF' | base64 -d | tar -xJ
+          cat << 'EOF' |tr -d ' \t\n\r' |  base64 -d | tar -xJ
             /Td6WFoAAATm1rRGAgAhARYAAAB0L+Wj4lf/Rv9dABcL3ASAUDIm7h19G/PyyzPs7Pg38OrWeznBvBtWH3VunhnX8ZVi1dutW8VtrRSGQpkg6gBUZhYzjFPm
             Rgpt8UDd9Yi6UqgDV7IeRm6OBR426QLnOR1X5CXfM3gtr0sIfnJoFFEequJJ20XsDprVZDxFSXHyROqy3S15Tf7V/JnhSp9k6jKa/zSBnXK3YihYZzO87Um0
             LWr2CG+oz1HrwJFHU2RQz4SRjfNFxv92DvyEu3l7U02ihdlMyvNBl3BOTu1WeagCAj0kbYk/DpaY6VNueHt/SRP7cCS5Uf9nMCyjN4TiJeseoBbQ8gXPs3aD
