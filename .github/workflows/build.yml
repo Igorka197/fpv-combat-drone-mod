@@ -16,14 +16,15 @@ jobs:
 
       - name: Unpack mod sources and generate assets
         run: |
-         sudo apt-get update && sudo apt-get install -y ffmpeg
-         pip install pillow
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          pip install pillow
           python3 setup_1.py
           python3 setup_2.py
           python3 setup_3.py
           python3 setup_4.py
           python3 setup_5.py
           python3 setup_6.py
+          python3 -c 'import pathlib; [p.write_text(p.read_text().replace("\\n", "\n")) for ext in ("*.gradle","*.properties","*.toml","*.java","*.json","*.mcmeta") for p in pathlib.Path(".").rglob(ext) if "\\n" in p.read_text()]'
           python3 generate_assets.py
 
       - name: Set up JDK 17
