@@ -24,6 +24,8 @@ jobs:
           python3 setup_4.py
           python3 setup_5.py
           python3 setup_6.py
+          python3 patch_1.py
+          python3 patch_2.py
           cat << 'EOF' > src/main/java/com/example/fpvdrone/registry/ModItems.java
           package com.example.fpvdrone.registry;
           import com.example.fpvdrone.FpvDroneMod;
@@ -67,4 +69,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v1.0.0 build/libs/*.jar --title "FPV Combat Drone v1.0.0" --notes "Minecraft 1.20.1 Forge 47.2.0+ (Requires GeckoLib 4.4.4+)" || gh release upload v1.0.0 build/libs/*.jar --clobber
+          gh release create v1.0.1 build/libs/*.jar --title "FPV Combat Drone v1.0.1" --notes "Bugfixes" || true
