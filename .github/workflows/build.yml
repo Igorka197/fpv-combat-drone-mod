@@ -95,6 +95,7 @@ jobs:
           python3 patch_2.py
           python3 patch_3.py
           python3 patch_4.py
+          sed -i 's/guiGraphics.blit(snowOverlayLoc/g.blit(snowOverlayLoc/g' src/main/java/com/example/fpvdrone/client/gui/FpvHudOverlay.java
           cat << 'EOF' > src/main/java/com/example/fpvdrone/registry/ModItems.java
           package com.example.fpvdrone.registry;
           import com.example.fpvdrone.FpvDroneMod;
