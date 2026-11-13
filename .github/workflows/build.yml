@@ -26,6 +26,8 @@ jobs:
           python3 setup_6.py
           python3 patch_1.py
           python3 patch_2.py
+          python3 patch_3.py
+          python3 patch_4.py
           cat << 'EOF' > src/main/java/com/example/fpvdrone/registry/ModItems.java
           package com.example.fpvdrone.registry;
           import com.example.fpvdrone.FpvDroneMod;
@@ -69,4 +71,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v1.0.1 build/libs/*.jar --title "FPV Combat Drone v1.0.1" --notes "Bugfixes" || true
+          gh release create v1.0.2 build/libs/*.jar --title "FPV Combat Drone v1.0.2" --notes "Visible props/warhead in FPV, realistic analog static, PC Mode-2 mouse+WASD controls with Expo & 18-deg camera uptilt." || true
