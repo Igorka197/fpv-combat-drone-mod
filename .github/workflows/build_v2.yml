@@ -1,0 +1,75 @@
+name: Build FPV Combat Drone v1.0.2
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build_mod:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unpack mod sources and generate assets
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          pip install pillow
+          python3 setup_1.py
+          python3 setup_2.py
+          python3 setup_3.py
+          python3 setup_4.py
+          python3 setup_5.py
+          python3 setup_6.py
+          python3 patch_1.py
+          python3 patch_2.py
+          python3 patch_3.py
+          python3 patch_4.py
+          sed -i 's/guiGraphics.blit(snowOverlayLoc/g.blit(snowOverlayLoc/g' src/main/java/com/example/fpvdrone/client/gui/FpvHudOverlay.java
+          cat << 'EOF' > src/main/java/com/example/fpvdrone/registry/ModItems.java
+          package com.example.fpvdrone.registry;
+          import com.example.fpvdrone.FpvDroneMod;
+          import com.example.fpvdrone.item.FpvDroneItem;
+          import com.example.fpvdrone.item.FpvGogglesItem;
+          import net.minecraft.world.item.ArmorItem;
+          import net.minecraft.world.item.Item;
+          import net.minecraftforge.registries.DeferredRegister;
+          import net.minecraftforge.registries.ForgeRegistries;
+          import net.minecraftforge.registries.RegistryObject;
+          public class ModItems {
+              public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, FpvDroneMod.MODID);
+              public static final RegistryObject<Item> FPV_DRONE_ITEM = ITEMS.register("fpv_drone_item", () -> new FpvDroneItem(new Item.Properties().stacksTo(4)));
+              public static final RegistryObject<Item> FPV_GOGGLES = ITEMS.register("fpv_goggles", () -> new FpvGogglesItem(FpvGogglesItem.GOGGLES_MATERIAL, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
+          }
+          EOF
+          python3 -c 'import pathlib; [p.write_text(p.read_text().replace("\\n", "\n")) for ext in ("*.gradle","*.properties","*.toml","*.java","*.json","*.mcmeta") for p in pathlib.Path(".").rglob(ext) if "\\n" in p.read_text()]'
+          python3 generate_assets.py
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
+
+      - name: Build Mod JAR
+        run: gradle build --no-daemon
+
+      - name: Upload Compiled Mod JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: fpvdrone-1.20.1-forge-jar
+          path: build/libs/*.jar
+
+      - name: Publish Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v1.0.2 build/libs/*.jar --title "FPV Combat Drone v1.0.2" --notes "Visible props/warhead in FPV, realistic analog static, PC Mode-2 mouse+WASD controls with Expo & 18-deg camera uptilt." || true
